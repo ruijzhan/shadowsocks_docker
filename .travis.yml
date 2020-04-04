@@ -1,3 +1,7 @@
+arch:
+    - amd64
+    - arm64
+
 services:
     - docker
 
@@ -10,6 +14,7 @@ before_script: skip
 script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker build . -t $DOCKER_USERNAME/ss:$(uname -p) --build-arg ARCH=$(uname -p)
+    - docker push $DOCKER_USERNAME/ss:$(uname -p)
 
 after_success: skip
 

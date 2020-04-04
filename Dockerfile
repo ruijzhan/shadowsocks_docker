@@ -23,7 +23,6 @@ ARG TZ='Asia/Chongqing'
 ARG ARCH
 
 ENV TZ ${TZ}
-ENV SS_LIBEV_VERSION v3.3.4
 ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git 
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
 ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.11/main/${ARCH}/linux-headers-4.19.36-r0.apk
@@ -52,7 +51,6 @@ RUN apk upgrade \
     && apk add --virtual .build-deps-kernel /linux-headers.apk \
     && git clone ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
-    && git checkout tags/${SS_LIBEV_VERSION} -b ${SS_LIBEV_VERSION} \
     && git submodule update --init --recursive \
     && ./autogen.sh \
     && ./configure --prefix=/usr --disable-documentation \
