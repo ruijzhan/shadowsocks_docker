@@ -1,0 +1,24 @@
+services:
+    - docker
+
+before_install: skip
+
+install: skip
+
+before_script: skip
+
+script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker build . -t $DOCKER_USERNAME/ss:$(uname -p)
+
+after_success: skip
+
+after_failure: skip
+
+before_deploy: skip
+
+deploy: skip
+
+after_deploy: skip
+
+after_script: skip
