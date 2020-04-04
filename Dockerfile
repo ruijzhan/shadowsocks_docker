@@ -2,16 +2,15 @@ FROM golang:1.14.1 as gobuild
 RUN set -x \
     && cd /root/ \
     && git clone https://github.com/shadowsocks/v2ray-plugin.git \
-    && cd v2ray-plugin/ \
-    && go build \
-    && cd /root/ \
+    && (cd v2ray-plugin/ \
+    && go build) \
     && git clone https://github.com/xtaci/kcptun.git \
     && cd kcptun/ \
     && go mod download \
-    && cd server \
-    && go build \
-    && cd ../client \
-    && go build
+    && (cd server \
+    && go build) \
+    && (cd client \
+    && go build)
 
 ####################################################################################
 
@@ -31,7 +30,8 @@ COPY --from=gobuild /root/v2ray-plugin/v2ray-plugin /usr/bin/v2ray-plugin
 COPY --from=gobuild /root/kcptun/server/server /usr/bin/kcpserver
 COPY --from=gobuild /root/kcptun/client/client /usr/bin/kcpclient
 
-RUN apk upgrade \
+RUN set -x \
+    && apk upgrade \
     && apk add bash tzdata rng-tools runit \
     && apk add --virtual .build-deps \
         autoconf \
