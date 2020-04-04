@@ -1,7 +1,7 @@
 FROM golang:1.14.1 as gobuild
 RUN set -x \
     && cd /root/ \
-    && https://github.com/shadowsocks/v2ray-plugin.git \
+    && git clone https://github.com/shadowsocks/v2ray-plugin.git \
     && cd v2ray-plugin/ \
     && go build \
     && cd /root/ \
