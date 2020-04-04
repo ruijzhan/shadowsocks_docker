@@ -30,6 +30,7 @@ COPY --from=gobuild /root/v2ray-plugin/v2ray-plugin /usr/bin/v2ray-plugin
 COPY --from=gobuild /root/kcptun/server/server /usr/bin/kcpserver
 COPY --from=gobuild /root/kcptun/client/client /usr/bin/kcpclient
 COPY entrypoint.sh /entrypoint.sh
+COPY runit /etc/service
 
 RUN set -x \
     && apk upgrade \
@@ -75,11 +76,11 @@ RUN set -x \
     && rm -rf /linux-headers.apk \
         shadowsocks-libev \
         simple-obfs \
-        /etc/service \
         /var/cache/apk/* \
-    && chmod +x /entrypoint.sh
+    && chmod +x /entrypoint.sh \
+    && chmod +x /etc/service/kcptun/run \
+    && chmod +x /etc/service/shadowsocks/run
 
 SHELL ["/bin/bash"]
 
-COPY runit /etc/service
 ENTRYPOINT ["/entrypoint.sh"]
