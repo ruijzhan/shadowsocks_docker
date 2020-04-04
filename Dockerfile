@@ -1,3 +1,20 @@
+FROM golang:1.14.1 as gobuild
+RUN set -x \
+    && cd /root/ \
+    && https://github.com/shadowsocks/v2ray-plugin.git \
+    && cd v2ray-plugin/ \
+    && go build \
+    && cd /root/ \
+    && git clone https://github.com/xtaci/kcptun.git \
+    && cd kcptun/ \
+    && go mod download \
+    && cd server \
+    && go build \
+    && cd ../client \
+    && go build
+
+####################################################################################
+
 FROM alpine:3.11
 
 LABEL maintainer="qiudog825@gmail.com"
@@ -8,10 +25,12 @@ ARG ARCH
 ENV TZ ${TZ}
 ENV SS_LIBEV_VERSION v3.3.4
 ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git 
-#ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
-#ENV PLUGIN_V2RAY_DOWNLOAD_URL https://github.com/shadowsocks/v2ray-plugin/releases/download/${V2RAY_PLUGIN_VERSION}/v2ray-plugin-linux-amd64-${V2RAY_PLUGIN_VERSION}.tar.gz
 ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.11/main/${ARCH}/linux-headers-4.19.36-r0.apk
+
+COPY --from=gobuild /root/v2ray-plugin/v2ray-plugin /usr/bin/v2ray-plugin
+COPY --from=gobuild /root/kcptun/server/server /usr/bin/kcpserver
+COPY --from=gobuild /root/kcptun/client/client /usr/bin/kcpclient
 
 RUN apk upgrade \
     && apk add bash tzdata rng-tools runit \
