@@ -9,7 +9,7 @@ before_script: skip
 
 script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker build . -t $DOCKER_USERNAME/ss:$(uname -p)
+    - docker build . -t $DOCKER_USERNAME/ss:$(uname -p) --build-arg ARCH=$(uname -p)
 
 after_success: skip
 
