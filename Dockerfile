@@ -29,6 +29,8 @@ ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.11/main/$
 COPY --from=gobuild /root/v2ray-plugin/v2ray-plugin /usr/bin/v2ray-plugin
 COPY --from=gobuild /root/kcptun/server/server /usr/bin/kcpserver
 COPY --from=gobuild /root/kcptun/client/client /usr/bin/kcpclient
+COPY runit /etc/service
+COPY entrypoint.sh /entrypoint.sh
 
 RUN set -x \
     && apk upgrade \
@@ -75,11 +77,9 @@ RUN set -x \
         shadowsocks-libev \
         simple-obfs \
         /etc/service \
-        /var/cache/apk/*
+        /var/cache/apk/* \
+    && chmod +x /entrypoint.sh
 
 SHELL ["/bin/bash"]
-
-COPY runit /etc/service
-COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
