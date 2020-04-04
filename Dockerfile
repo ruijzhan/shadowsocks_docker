@@ -77,6 +77,7 @@ RUN set -x \
         shadowsocks-libev \
         simple-obfs \
         /var/cache/apk/* \
+    && ln -s /lib/ld-musl-aarch64.so.1 /lib/ld-linux-aarch64.so.1 \
     && chmod +x /entrypoint.sh \
     && chmod +x /etc/service/kcptun/run \
     && chmod +x /etc/service/shadowsocks/run
