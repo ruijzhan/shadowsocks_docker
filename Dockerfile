@@ -3,6 +3,7 @@ FROM alpine:3.11
 LABEL maintainer="qiudog825@gmail.com"
 
 ARG TZ='Asia/Chongqing'
+ARG ARCH='x86_64'
 
 ENV TZ ${TZ}
 ENV SS_LIBEV_VERSION v3.3.4
