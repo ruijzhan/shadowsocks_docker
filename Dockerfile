@@ -1,19 +1,20 @@
 FROM golang:1.14.1 as gobuild
 
-ENV LDFLAGS "-X main.VERSION=$VERSION -s -w"
+ENV LDFLAGS "-X main.VERSION=QiuDog -s -w"
+ENV GCFLAGS ""
 
 RUN set -x \
     && cd /root/ \
     && git clone https://github.com/shadowsocks/v2ray-plugin.git \
     && (cd v2ray-plugin/ \
-    && env CGO_ENABLED=0 go build -v -ldflags "-s -w") \
+    && env CGO_ENABLED=0 go build -v -ldflags "$LDFLAGS" -gcflags "$GCFLAGS") \
     && git clone https://github.com/xtaci/kcptun.git \
     && cd kcptun/ \
     && go mod download \
     && (cd server \
-    && env CGO_ENABLED=0 go build -v -ldflags "-s -w") \
+    && env CGO_ENABLED=0 go build -v -ldflags "$LDFLAGS" -gcflags "$GCFLAGS") \
     && (cd client \
-    && env CGO_ENABLED=0 go build -v -ldflags "-s -w") 
+    && env CGO_ENABLED=0 go build -v -ldflags "$LDFLAGS" -gcflags "$GCFLAGS") 
 
 ####################################################################################
 
@@ -80,7 +81,6 @@ RUN set -x \
         shadowsocks-libev \
         simple-obfs \
         /var/cache/apk/* \
-    && ln -s /lib/ld-musl-${ARCH}.so.1 /lib/ld-linux-${ARCH}.so.1 \
     && chmod +x /entrypoint.sh \
     && chmod +x /etc/service/kcptun/run \
     && chmod +x /etc/service/shadowsocks/run
