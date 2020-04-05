@@ -3,14 +3,14 @@ RUN set -x \
     && cd /root/ \
     && git clone https://github.com/shadowsocks/v2ray-plugin.git \
     && (cd v2ray-plugin/ \
-    && go build) \
+    && go build -ldflags -s -w) \
     && git clone https://github.com/xtaci/kcptun.git \
     && cd kcptun/ \
     && go mod download \
     && (cd server \
-    && go build) \
+    && go build -ldflags -s -w) \
     && (cd client \
-    && go build)
+    && go build -ldflags -s -w)
 
 ####################################################################################
 
