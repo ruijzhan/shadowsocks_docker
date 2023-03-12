@@ -1,1 +1,0 @@
-# shadowsocks_docker
